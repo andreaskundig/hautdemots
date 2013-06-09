@@ -1,0 +1,82 @@
+<html>
+<head>
+<script src="mots.js"></script>
+<script >
+
+// Il n'y a que les lettres qui apparaissent parmi les mots de la liste
+var lettres_equivalentes = [
+["A", "a", "à", "â", "ä"],
+["D", "d"],
+["E", "e","è", "é", "ê", "ë", "O", "ô", "ö", "o", "P", "p", "c", "ç", "N", "n", "G", "g", "Q", "q"],
+["F", "f"], 
+["H", "h", "b" , "L", "l", "k",],
+[ "I", "i", "j", "î", "ï"], 
+["M", "m"],
+["R", "r"],
+["S", "s"],
+["T", "t"],
+["U", "V", "u", "ù", "û", "ü", "v", "y"],
+["W", "w"], 
+["x"],
+["z"],
+[ "-" ]
+]
+ 
+function codes_lettres(lettres_equiv){
+  var codes = {};
+  lettres_equiv.forEach(function(lettres){
+      var code = lettres[0];
+      lettres.forEach(function(lettre){
+         codes[lettre] = code;
+      });
+  });
+  return codes;
+}
+
+function code_mot(mot, codes_lettres){
+  //pas de forEach pour les strings
+  var code = "";
+  for(var i=0 ; i < mot.length ; i++){
+    var lettre = mot[i];
+    code += codes_lettres[lettre];
+  }
+  return code;
+}
+
+function mots_equivalents(mots, codes_lettres){
+  var mots_equiv = {};
+  mots.forEach(function(mot){
+     var code = code_mot(mot, codes_lettres);
+     if(mots_equiv[code]){
+       mots_equiv[code].push(mot);
+     }else{
+       mots_equiv[code] = [mot];
+     }
+  });
+  return mots_equiv;
+}
+
+function afficher(div, contenu){
+   var p = document.createElement("p");
+   p.innerHTML = contenu;
+   div.appendChild(p);
+}
+
+function init(){
+  var mots = motsFrancais(),
+      codes = codes_lettres(lettres_equivalentes),
+      mots_equiv = mots_equivalents(mots, codes),
+      affichage = document.getElementById("affichage");
+  for(var code in mots_equiv){
+    var equivalents = mots_equiv[code];
+    if(equivalents.length > 1){
+      afficher(affichage, equivalents.join(", "));
+    }
+  }
+}
+</script>
+</head>
+<body onload='init()'>
+<div id='affichage'></div>
+</body>
+</html>
